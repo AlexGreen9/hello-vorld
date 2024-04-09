@@ -1,83 +1,83 @@
-#include  <stdio.h>
-#include  <строка.h>
-#include  "contacts.h"
+#include <stdio.h>
+#include <string.h>
+#include "contacts.h"
 
-недействительный  printMenu () {
-    printf ( "\n===== Менеджер контактов =====\n" );
-    printf ( "1. Добавить контакт\n" );
-    printf ( "2. Удалить контакт\n" );
-    printf ( "3. Показать все контакты\n" );
-    printf ( "4. Выход\n" );
-    printf ( "==========================\n" );
-    printf ( "Введите свой выбор: " );
+void printMenu() {
+printf("\n===== Contact Manager =====\n");
+printf("1. Add Contact\n");
+printf("2. Delete Contact\n");
+printf("3. Display All Contacts\n");
+printf("4. Exit\n");
+printf("===========================\n");
+printf("Enter your choice: ");
 }
 
-интервал  основной () {
-    Контакт *  head  =  NULL ;
-    интервал  выбора ;
-    char  firstName [ 50 ], LastName [ 50 ];
+int main() {
+Contact* head = NULL;
+int choice;
+char firstName[50], lastName[50];
 
-    делать {
-        ПечатьМеню ();
-        scanf ( "%d" , & выбор );
-        получитьчар (); // Захват символа новой строки
+do {
+printMenu();
+scanf("%d", &choice);
+getchar(); // Capture newline character
 
-        переключатель ( выбор ) {
-            случай  1 : // Добавить контакт
-                {
-                    char  jobTitle [ 50 ], компания [ 50 ], номер телефона [ 15 ], электронная почта [ 50 ], Twitter [ 50 ];
-                    printf ( "Введите имя_имя:" );
-                    fgets ( firstName , 50 , stdin );
-                    firstName [ strcspn ( firstName , "\n" )] =  0 ;   // Удалить символ новой строки
-                    printf ( "Введите фамилию:" );
-                    fgets ( lastName , 50 , stdin );
-                    LastName [ strcspn ( lastName , "\n" )] =  0 ;   // Удалить символ новой строки
-                    printf ( "Введите задание:" );
-                    fgets ( jobTitle , 50 , стандартный ввод );
-                    jobTitle [ strcspn ( jobTitle , "\n" )] =  0 ;   // Удалить символ новой строки
-                    printf ( "Введите компанию: " );
-                    fgets ( компания , 50 , стандартный ввод );
-                    компания [ strcspn ( компания , "\n" )] =  0 ;   // Удалить символ новой строки
-                    printf ( "Введите телефон:" );
-                    fgets ( phoneNumber , 15 , стандартный ввод );
-                    номер телефона [ strcspn ( номер телефона , "\n" )] =  0 ;   // Удалить символ новой строки
-                    printf ( "Введите адрес электронной почты:" );
-                    fgets ( электронная почта , 50 , стандартный ввод );
-                    электронная почта [ strcspn ( электронная почта , «\n» )] =  0 ;   // Удалить символ новой строки
-                    printf ( "Войдите в социальную сеть: " );
-                    fgets ( твиттер , 50 , стандартный ввод );
-                    твиттер [ strcspn ( твиттер , "\n" )] =  0 ;   // Удалить символ новой строки
+switch(choice) {
+case 1: // Add Contact
+{
+char jobTitle[50], company[50], phoneNumber[15], email[50], twitter[50];
+printf("Enter first_name: ");
+fgets(firstName, 50, stdin);
+firstName[strcspn(firstName, "\n")] = 0; // Remove newline character
+printf("Enter last_name: ");
+fgets(lastName, 50, stdin);
+lastName[strcspn(lastName, "\n")] = 0; // Remove newline character
+printf("Enter job: ");
+fgets(jobTitle, 50, stdin);
+jobTitle[strcspn(jobTitle, "\n")] = 0; // Remove newline character
+printf("Enter company: ");
+fgets(company, 50, stdin);
+company[strcspn(company, "\n")] = 0; // Remove newline character
+printf("Enter phone: ");
+fgets(phoneNumber, 15, stdin);
+phoneNumber[strcspn(phoneNumber, "\n")] = 0; // Remove newline character
+printf("Enter email: ");
+fgets(email, 50, stdin);
+email[strcspn(email, "\n")] = 0; // Remove newline character
+printf("Enter social media: ");
+fgets(twitter, 50, stdin);
+twitter[strcspn(twitter, "\n")] = 0; // Remove newline character
 
-                    Контакт *  newContact  =  createContact ( firstName , LastName , jobTitle , компания , номер телефона , адрес электронной почты , Twitter );
-                    вставитьКонтакт ( & голова , новыйКонтакт );
-                    printf ( "Контакт успешно добавлен.\n" );
-                }
-                перерыв ;
-            случай  2 : // Удалить контакт
-                printf ( "Введите имя контакта, который нужно удалить: " );
-                fgets ( firstName , 50 , stdin );
-                firstName [ strcspn ( firstName , "\n" )] =  0 ;   // Удалить символ новой строки
-                printf ( "Введите фамилию контакта, который нужно удалить: " );
-                fgets ( lastName , 50 , stdin );
-                LastName [ strcspn ( lastName , "\n" )] =  0 ;   // Удалить символ новой строки
+Contact* newContact = createContact(firstName, lastName, jobTitle, company, phoneNumber, email, twitter);
+insertContact(&head, newContact);
+printf("Contact added successfully.\n");
+}
+break;
+case 2: // Delete Contact
+printf("Enter first name of contact to delete: ");
+fgets(firstName, 50, stdin);
+firstName[strcspn(firstName, "\n")] = 0; // Remove newline character
+printf("Enter last name of contact to delete: ");
+fgets(lastName, 50, stdin);
+lastName[strcspn(lastName, "\n")] = 0; // Remove newline character
 
-                if ( deleteContact ( & head , firstName , LastName ))
-                    printf ( "Контакт успешно удален.\n" );
-                еще
-                    printf ( "Контакт не найден.\n" );
+if(deleteContact(&head, firstName, lastName))
+printf("Contact deleted successfully.\n");
+else
+printf("Contact not found.\n");
 
-                перерыв ;
-            случай  3 : // Отображение всех контактов
-                DisplayContacts ( голова );
-                перерыв ;
-            случай  4 : // Выход
-                printf ( "Выход из программы.\n" );
-                перерыв ;
-            по умолчанию :
-                printf ( "Неверный выбор. Повторите попытку.\n" );
-        }
+break;
+case 3: // Display All Contacts
+displayContacts(head);
+break;
+case 4: // Exit
+printf("Exiting program.\n");
+break;
+default:
+printf("Invalid choice. Please try again.\n");
+}
 
-    } while ( выбор  !=  4 );
+} while(choice != 4);
 
-    вернуть  0 ;
+return 0;
 }
