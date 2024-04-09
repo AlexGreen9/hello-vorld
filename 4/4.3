@@ -1,0 +1,170 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Contact {
+    char firstName[50];
+    char lastName[50];
+    char jobTitle[50];
+    char workplace[50];
+    char phone[20];
+    char email[50];
+    char socialMedia[50];
+    struct Contact* left;
+    struct Contact* right;
+} Contact;
+
+Contact* root = NULL;
+
+Contact* createContact(char firstName[], char lastName[], char jobTitle[], char workplace[], char phone[], char email[], char socialMedia[]) {
+    Contact* newContact = (Contact*)malloc(sizeof(Contact));
+    strcpy(newContact->firstName, firstName);
+    strcpy(newContact->lastName, lastName);
+    strcpy(newContact->jobTitle, jobTitle);
+    strcpy(newContact->workplace, workplace);
+    strcpy(newContact->phone, phone);
+    strcpy(newContact->email, email);
+    strcpy(newContact->socialMedia, socialMedia);
+    newContact->left = NULL;
+    newContact->right = NULL;
+    return newContact;
+}
+
+Contact* insertContact(Contact* root, Contact* newContact) {
+    if (root == NULL) {
+        return newContact;
+    }
+
+    if (strcmp(newContact->lastName, root->lastName) < 0) {
+        root->left = insertContact(root->left, newContact);
+    } else {
+        root->right = insertContact(root->right, newContact);
+    }
+
+    return root;
+}
+
+int height(Contact* node) {
+    if (node == NULL) {
+        return 0;
+    }
+    int left_height = height(node->left);
+    int right_height = height(node->right);
+    return 1 + (left_height > right_height ? left_height : right_height);
+}
+
+int balanceFactor(Contact* node) {
+    if (node == NULL) {
+        return 0;
+    }
+    return height(node->left) - height(node->right);
+}
+
+Contact* rotateRight(Contact* node) {
+    Contact* newRoot = node->left;
+    node->left = newRoot->right;
+    newRoot->right = node;
+    return newRoot;
+}
+
+Contact* rotateLeft(Contact* node) {
+    Contact* newRoot = node->right;
+    node->right = newRoot->left;
+    newRoot->left = node;
+    return newRoot;
+}
+
+Contact* balanceContact(Contact* node) {
+    int balance = balanceFactor(node);
+    
+    if (balance > 1) {
+        if (balanceFactor(node->left) < 0) {
+            node->left = rotateLeft(node->left);
+        }
+        return rotateRight(node);
+    } else if (balance < -1) {
+        if (balanceFactor(node->right) > 0) {
+            node->right = rotateRight(node->right);
+        }
+        return rotateLeft(node);
+    }
+    
+    return node;
+}
+
+Contact* balanceTree(Contact* root) {
+    if (root != NULL) {
+        root->left = balanceTree(root->left);
+        root->right = balanceTree(root->right);
+        return balanceContact(root);
+    }
+    return root;
+}
+
+void displayContacts(Contact* root) {
+    if (root != NULL) {
+        displayContacts(root->left);
+        printf("Name: %s %s\n", root->firstName, root->lastName);
+        printf("Job Title: %s\n", root->jobTitle);
+        printf("Workplace: %s\n", root->workplace);
+        printf("Phone: %s\n", root->phone);
+        printf("Email: %s\n", root->email);
+        printf("Social Media: %s\n", root->socialMedia);
+        printf("\n");
+        displayContacts(root->right);
+    }
+}
+
+int main() {
+    int choice;
+    
+    do {
+        printf("Phonebook Menu\n");
+        printf("1. Add Contact\n");
+        printf("2. Display Contacts\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        
+        switch (choice) {
+            case 1: {
+               char firstName[50];
+               char lastName[50];
+               char jobTitle[50];
+               char workplace[50];
+               char phone[50];
+               char email[50];
+               char socialMedia[50];
+                
+                printf("Enter name: ");
+                scanf("%s", firstName);
+                printf("Enter job: ");
+                scanf("%s", jobTitle);
+                printf("Enter phone number: ");
+                scanf("%s", phone);
+                printf("Enter email: ");
+                scanf("%s", email);
+                printf("Enter social media: ");
+                scanf("%s", socialMedia);
+                
+               createContact(firstName, lastName, jobTitle, workplace, phone, email, socialMedia) ;
+                printf("Contact added successfully\n");
+                break;
+            }
+            case 2: {
+                displayContacts(root);
+                break;
+            }
+            case 3: {
+                printf("Exiting...\n");
+                break;
+            }
+            default: {
+                printf("Invalid choice\n");
+                break;
+            }
+        }
+    } while (choice != 3);
+    
+    return 0;
+}
