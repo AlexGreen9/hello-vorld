@@ -1,0 +1,21 @@
+#ifndef  CONTACTS_H
+#define  CONTACTS_H
+
+typedef  структура  Контакт {
+    char  firstName [ 50 ];
+    фамилия  персонажа [ 50 ];
+    char  jobTitle [ 50 ];
+     рабочее место повара [ 50 ] ;
+    символьный  телефон [ 15 ];
+     электронное письмо с символом [ 50 ];
+    персонаж  SocialMedia [ 50 ];
+    структура  Контакт *  следующий ;
+    структура  Контакт *  предыдущая ;
+} Контакт ;
+
+void  InsertContact ( Contact * *  head , Contact *  newContact );
+int  deleteContact ( Contact * *  head , char *  firstName , char *  LastName );
+void  displayContacts ( Контакт *  head );
+Контакт *  createContact ( первое  имя персонажа [], фамилия  последнего имени [], имя  вакансии [], рабочее место персонажа  [], телефон персонажа [], адрес электронной почты персонажа [], персонаж SocialMedia []);   
+
+#endif
