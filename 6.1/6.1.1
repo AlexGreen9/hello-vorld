@@ -1,74 +1,74 @@
-#include  <stdio.h>
-#include  <stdlib.h>
-#include  <строка.h>
-#include  "contacts.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "contacts.h"
 
-void  InsertContact ( Contact * *  head , Contact *  newContact ) {
-    if ( * head  ==  NULL  ||  strcmp ( newContact -> LastName , ( * head ) -> LastName ) <  0 ) {
-        новыйКонтакт -> следующий  =  * голова ;
-        если ( * голова  !=  NULL ) {
-            ( * head ) -> предыдущая  =  новыйКонтакт ;
+void insertContact(Contact** head, Contact* newContact) {
+    if (*head == NULL || strcmp(newContact->lastName, (*head)->lastName) < 0) {
+        newContact->next = *head;
+        if (*head != NULL) {
+            (*head)->prev = newContact;
         }
-        * голова  =  новыйКонтакт ;
-    } еще {
-        Контакт *  ток  =  * голова ;
-        while ( текущий -> следующий  !=  NULL  &&  strcmp ( newContact -> LastName , текущий -> следующий -> LastName ) >  0 ) {
-            текущий  =  текущий -> следующий ;
+        *head = newContact;
+    } else {
+        Contact* current = *head;
+        while (current->next != NULL && strcmp(newContact->lastName, current->next->lastName) > 0) {
+            current = current->next;
         }
-        новыйКонтакт -> следующий  =  текущий -> следующий ;
-        если ( текущий -> следующий  !=  NULL ) {
-            текущий -> следующий -> предыдущий  =  новыйКонтакт ;
+        newContact->next = current->next;
+        if (current->next != NULL) {
+            current->next->prev = newContact;
         }
-        текущий -> следующий  =  новыйконтакт ;
-        новыйКонтакт -> предыдущий  =  текущий ;
+        current->next = newContact;
+        newContact->prev = current;
     }
 }
 
-void  deleteContact ( Контакт * *  head , char *  firstName , char *  LastName ) {
-    Контакт *  ток  =  * голова ;
-    в то время как ( текущий  !=  NULL ) {
-        if ( strcmp ( current -> firstName , firstName ) ==  0  &&  strcmp ( current -> LastName , LastName ) ==  0 ) {
-            если ( текущий -> предыдущий  !=  NULL ) {
-                текущий -> предыдущий -> следующий  =  текущий -> следующий ;
-            } еще {
-                * head  =  текущий -> следующий ;
+void deleteContact(Contact** head, char* firstName, char* lastName) {
+    Contact* current = *head;
+    while (current != NULL) {
+        if (strcmp(current->firstName, firstName) == 0 && strcmp(current->lastName, lastName) == 0) {
+            if (current->prev != NULL) {
+                current->prev->next = current->next;
+            } else {
+                *head = current->next;
             }
-            если ( текущий -> следующий  !=  NULL ) {
-                текущий -> следующий -> предыдущий  =  текущий -> предыдущий ;
+            if (current->next != NULL) {
+                current->next->prev = current->prev;
             }
-            бесплатный ( текущий );
-            возвращаться ;
+            free(current);
+            return;
         }
-        текущий  =  текущий -> следующий ;
+        current = current->next;
     }
-    printf ( "Контакт не найден\n" );
+    printf("Contact not found\n");
 }
 
-void  displayContacts ( Контакт *  head ) {
-    Контакт *  ток  =  голова ;
-    в то время как ( текущий  !=  NULL ) {
-        printf ( "Имя: %s %s\n" , текущее -> имя , текущее -> последнее имя );
-        printf ( "Должность: %s\nРабочее место: %s\n" , текущий -> jobTitle , текущий -> рабочее место );
-        printf ( "Телефон: %s\nЭлектронная почта: %s\nСоциальные сети: %s\n" , текущий -> телефон , текущий -> электронная почта , текущий -> социальные сети );
-        printf ( "\n" );
-        текущий  =  текущий -> следующий ;
+void displayContacts(Contact* head) {
+    Contact* current = head;
+    while (current != NULL) {
+        printf("Name: %s %s\n", current->firstName, current->lastName);
+        printf("Job Title: %s\nWorkplace: %s\n", current->jobTitle, current->workplace);
+        printf("Phone: %s\nEmail: %s\nSocial Media: %s\n", current->phone, current->email, current->socialMedia);
+        printf("\n");
+        current = current->next;
     }
 }
 
-Контакт *  createContact ( char  firstName [ ] , char  LastName [], char  jobTitle [], char  на рабочем месте [], char  phone [], char  email [], charsocialMedia  []) {
-    Контакт *  newContact  = ( Контакт * ) malloc ( sizeof ( Контакт ));
-    если ( newContact  ==  NULL ) {
-        printf ( "Ошибка выделения памяти" );
-        вернуть  НУЛЬ ;
+Contact* createContact(char firstName[], char lastName[], char jobTitle[], char workplace[], char phone[], char email[], char socialMedia[]) {
+    Contact* newContact = (Contact*)malloc(sizeof(Contact));
+    if (newContact == NULL) {
+        printf("Memory allocation failed");
+        return NULL;
     }
-    strcpy ( newContact -> firstName , firstName );
-    strcpy ( newContact -> LastName , LastName );
-    strcpy ( newContact -> jobTitle , jobTitle );
-    strcpy ( newContact -> рабочее место , рабочее место );
-    strcpy ( newContact -> телефон , телефон );
-    strcpy ( newContact -> электронная почта , электронная почта );
-    strcpy ( newContact -> SocialMedia , SocialMedia );
-    новыйКонтакт -> следующий  =  NULL ;
-    новыйКонтакт -> предыдущий  =  NULL ;
-    вернуть  новый контакт ;
+    strcpy(newContact->firstName, firstName);
+    strcpy(newContact->lastName, lastName);
+    strcpy(newContact->jobTitle, jobTitle);
+    strcpy(newContact->workplace, workplace);
+    strcpy(newContact->phone, phone);
+    strcpy(newContact->email, email);
+    strcpy(newContact->socialMedia, socialMedia);
+    newContact->next = NULL;
+    newContact->prev = NULL;
+    return newContact;
 }
