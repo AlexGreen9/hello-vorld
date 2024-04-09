@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <arpa/inet.h>
+#include <string.h>
+#include <time.h>
+
+int main(int argc, char *argv[]) {
+    if (argc != 4) {
+        printf("Использование: %s <IP адрес шлюза> <маска подсети> <количество пакетов>\n", argv[0]);
+        return 1;
+    }
+
+    char* gateway_ip = argv[1];
+    char* subnet_mask = argv[2];
+    int num_packets = atoi(argv[3]);
+
+    srand(time(NULL));
+
+    int own_subnet_count = 0;
+    int other_subnet_count = 0;
+
+    for (int i = 0; i < num_packets; i++) {
+        unsigned int dest_ip = rand(); // Генерируем случайный IP адрес
+
+        struct in_addr dest_addr;
+        dest_addr.s_addr = htonl(dest_ip);
+
+        struct in_addr gateway_addr;
+        inet_pton(AF_INET, gateway_ip, &gateway_addr);
+
+        struct in_addr subnet_mask_addr;
+        inet_pton(AF_INET, subnet_mask, &subnet_mask_addr);
+
+        if ((dest_addr.s_addr & subnet_mask_addr.s_addr) == (gateway_addr.s_addr & subnet_mask_addr.s_addr)) {
+            own_subnet_count++;
+        } else {
+            other_subnet_count++;
+        }
+    }
+
+    printf("Статистика:\n");
+    printf("Пакетов для собственной подсети: %d (%.2f%%)\n", own_subnet_count, (float)own_subnet_count/num_packets * 100);
+    printf("Пакетов для других подсетей: %d (%.2f%%)\n", other_subnet_count, (float)other_subnet_count/num_packets * 100);
+
+    return 0;
+}
