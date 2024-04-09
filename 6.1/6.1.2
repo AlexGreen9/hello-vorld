@@ -1,21 +1,21 @@
-#ifndef  CONTACTS_H
-#define  CONTACTS_H
+#ifndef CONTACTS_H
+#define CONTACTS_H
 
-typedef  структура  Контакт {
-    char  firstName [ 50 ];
-    фамилия  персонажа [ 50 ];
-    char  jobTitle [ 50 ];
-     рабочее место повара [ 50 ] ;
-    символьный  телефон [ 15 ];
-     электронное письмо с символом [ 50 ];
-    персонаж  SocialMedia [ 50 ];
-    структура  Контакт *  следующий ;
-    структура  Контакт *  предыдущая ;
-} Контакт ;
+typedef struct Contact {
+    char firstName[50];
+    char lastName[50];
+    char jobTitle[50];
+    char workplace[50];
+    char phone[15];
+    char email[50];
+    char socialMedia[50];
+    struct Contact* next;
+    struct Contact* prev;
+} Contact;
 
-void  InsertContact ( Contact * *  head , Contact *  newContact );
-int  deleteContact ( Contact * *  head , char *  firstName , char *  LastName );
-void  displayContacts ( Контакт *  head );
-Контакт *  createContact ( первое  имя персонажа [], фамилия  последнего имени [], имя  вакансии [], рабочее место персонажа  [], телефон персонажа [], адрес электронной почты персонажа [], персонаж SocialMedia []);   
+void insertContact(Contact** head, Contact* newContact);
+int deleteContact(Contact** head, char* firstName, char* lastName);
+void displayContacts(Contact* head);
+Contact* createContact(char firstName[], char lastName[], char jobTitle[], char workplace[], char phone[], char email[], char socialMedia[]);
 
 #endif
