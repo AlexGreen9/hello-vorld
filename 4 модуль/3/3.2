@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <string.h>
+#include <sys/msg.h>
+
+#define MAX_MSG_SIZE 256
+
+struct msg_buffer {
+long msg_type;
+char msg_text[MAX_MSG_SIZE];
+};
+
+int main() {
+key_t key;
+int msg_id;
+struct msg_buffer message;
+
+key = ftok("/tmp", 'A');
+msg_id = msgget(key, 0666 | IPC_CREAT);
+
+printf("Enter your name: ");
+fgets(message.msg_text, MAX_MSG_SIZE, stdin);
+message.msg_text[strcspn(message.msg_text, "\n")] = 0;
+
+while (1) {
+printf("Enter a message to send (type 'exit' to quit):\n");
+fgets(message.msg_text, MAX_MSG_SIZE, stdin);
+message.msg_type = getpid();
+
+msgsnd(msg_id, &message, sizeof(message), 0);
+
+if (strcmp(message.msg_text, "exit\n") == 0) {
+break;
+}
+
+msgrcv(msg_id, &message, sizeof(message), getpid(), 0);
+printf("Received message: %s\n", message.msg_text);
+}
+
+msgctl(msg_id, IPC_RMID, NULL);
+
+return 0;
+}
